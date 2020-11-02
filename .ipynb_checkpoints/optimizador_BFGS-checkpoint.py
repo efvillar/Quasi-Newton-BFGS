@@ -151,3 +151,22 @@ def evaluador(funcion, X0, var_sensibilidad):
     resultados_df = pd.DataFrame(resultados_dict)
         
     return minimo, maximo, promedio, mediana, resultados_df
+
+
+#se crea una función para aproximar el gradiente numeriva en un punto - from scratch
+def num_der(f, x, epsilon=0.01):
+    """
+    x: punto para el cual se calcula el gradiente. np.array
+    """
+    x = np.array(x)
+    n = x.size
+    gradiente = np.zeros(n)
+    xp = np.copy(x)
+    j=0
+    for dato in x:
+        xp[j] = dato + epsilon
+        gradiente[j] = ((f(x) - f(xp)) / epsilon)
+        j += 1
+        xp = np.copy(x)
+       
+    return gradiente
