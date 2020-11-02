@@ -117,3 +117,37 @@ def bfgs_method_num_grad(f, fnum_grad, x0, maxiter=None, epsi=10e-3, step = 0.01
         Hk = np.dot(A1, np.dot(Hk, A2)) + (ro * sk[:, np.newaxis] *
                                                  sk[np.newaxis, :])
     return (xk, k, ln.norm(gfk), f(xk))
+
+
+def evaluador(funcion, X0, var_sensibilidad):
+    """
+    funcion:  es la funcion a optimizar - bfgs_method_num_grad(fN_ackley, num_der, X_inicial, maxiter=None, epsi=10e-3, step=.6)
+    x0: vector de inicio
+    var_sensibilidad: en este caso el paso que tendra 25 valores diferentes - array
+    """
+    n = len(X0)
+    f_resultados = list()
+    x_resultados = list()
+    ng_resultados = list()
+    k_resultados = list()
+    
+    for sensibilidad in var_sensibilidad:
+        #print (sensibilidad)
+        resultado, k, ng, fo = bfgs_method_num_grad(funcion, num_der, X0, maxiter=None, epsi=10e-3, step= sensibilidad)
+        #print (resultado)
+        #print (fo)
+        f_resultados.append(fo)
+        x_resultados.append(resultado)
+        ng_resultados.append(ng)
+        k_resultados.append(k)
+        
+    promedio = np.nanmean(np.array(f_resultados))     
+    maximo = np.nanmax(np.array(f_resultados)) 
+    minimo = np.nanmin(np.array(f_resultados)) 
+    mediana = np.nanmedian(np.array(f_resultados)) 
+    
+    resultados_dict = {"Paso": var_sensibilidad, "Iteraciones para convergencia":k_resultados, "gradiente en el minimo":ng_resultados, "F(X) en el minimo":f_resultados, "Coordenadas":x_resultados}
+    
+    resultados_df = pd.DataFrame(resultados_dict)
+        
+    return minimo, maximo, promedio, mediana, resultados_df
