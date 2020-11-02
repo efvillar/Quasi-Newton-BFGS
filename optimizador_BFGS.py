@@ -1,7 +1,14 @@
 import numpy as np
 import numpy.linalg as ln
+import pandas as pd
 import scipy as sp
 import scipy.optimize
+import matplotlib.pyplot as plt
+import pandas as pd
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.options.display.max_colwidth = 300
+from optimizador_BFGS import *
 
 #optimizador con la implementacion de Nocedal
 def bfgs_method(f, fprime, x0, maxiter=None, epsi=10e-3):
